@@ -4,6 +4,8 @@ Stepper motor1(2048, 8, 10, 9, 11);
 int vueltas_bajar=2;
 int vueltas_subir=3;
 int  contador= 0;
+long tiempo_subida=30000;
+long tiempo_bajada=300000;
 unsigned long tiempo = 0;
 
 void setup() {
@@ -17,8 +19,9 @@ void setup() {
 
 void loop() {
 
-  alarma_subida(20000);
-  //alarma_bajada(10000);
+  alarma_subida(tiempo_subida);
+  tiempo = 0;
+  alarma_bajada(tiempo_bajada+tiempo_subida);
 
 }
 
@@ -59,8 +62,7 @@ void activar_motor_subir(int vueltas){
     }
     //contador=num_vueltas+1;
     Serial.println("el motor termina de subir");
-    tiempo = 0;
-    alarma_bajada(10000);
+   
 
 }
 
