@@ -1,6 +1,8 @@
-#include <Stepper.h>
 
+#include <Vela.h>
+#include <Stepper.h>
 Stepper motor1(2048, 8, 10, 9, 11);
+Vela vela1();
 int vueltas_bajar=2;
 int vueltas_subir=3;
 int  contador= 0;

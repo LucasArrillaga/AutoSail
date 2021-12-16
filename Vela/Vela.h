@@ -1,7 +1,8 @@
 
 #include "Reloj.h"
-#include <iostream>
 
+#ifndef _VELA
+#define _VELA
 class Vela {
 
   Reloj hora_subida;
@@ -10,12 +11,15 @@ class Vela {
 
   public: //Miembros públicos
     void setHora_subida(Reloj h_subida); //Método Set
-    void Vela::setHora_bajada(Reloj h_bajada);
-    void Vela::setBajar(bool b); //Método Set
-    unsigned long Vela::getHora_subida();
-    unsigned long Vela::getHora_bajada();
-    bool Vela::getBajar();
+    void setHora_bajada(Reloj h_bajada);
+    void setBajar(bool b); //Método Set
+    unsigned long getHora_subida();
+    unsigned long getHora_bajada();
+    bool getBajar();
 };
+#include  ″Vela.c″
+#endif
+
 
 void Vela::setHora_subida(Reloj h_subida){
 	hora_subida = h_subida;
@@ -39,4 +43,3 @@ unsigned long Vela::getHora_bajada(){
 bool Vela::getBajar(){
   return bajar;
 }
-

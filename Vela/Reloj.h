@@ -1,11 +1,12 @@
-
+#ifndef _RELOJ
+#define _RELOJ
 class Reloj {
 
   int horas;
   int minutos;
   int segundos;
 
-  public: //Miembros públicos
+  public: //Miembros públicos 
   	void setHoras(int hora_reloj); //Método Set
     void setMinutos(int minuto_reloj); //Método Set
     void setSegundos(int segundo_reloj); //Método Set
@@ -14,6 +15,13 @@ class Reloj {
     int getSegundos(void); //Método Get
     unsigned long conv_a_mili(void); // metodo para convertir a milisegundos
 };
+#include  ″Reloj.c″
+#endif
+
+
+
+
+
 
 void Reloj::setHoras(int hora_reloj){
 	horas = hora_reloj;
