@@ -1,7 +1,5 @@
-#include <Reloj.h>
+
 #include <Vela.h>
-
-
 #include <Stepper.h>
 Stepper motor1(2048, 8, 10, 9, 11);
 Reloj r_subida;
