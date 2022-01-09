@@ -1,19 +1,17 @@
 
-<<<<<<< Updated upstream
-#include <Vela.h>
-=======
 
->>>>>>> Stashed changes
+//#include <Vela.h>
+
 #include <Stepper.h>
 Stepper motor1(2048, 8, 10, 9, 11);
-Reloj r_subida;
- Reloj r_bajada;
-Vela vela1;
-int vueltas_bajar=2;
-int vueltas_subir=3;
+//Reloj r_subida;
+ //Reloj r_bajada;
+//Vela vela1;
+int vueltas_bajar=4;
+int vueltas_subir=4;
 int  contador= 0;
 long tiempo_subida=3000;
-long tiempo_bajada=30000;
+long tiempo_bajada=120000;
 unsigned long tiempo = 0;
 
 
@@ -25,16 +23,16 @@ void setup() {
   tiempo = millis(); //se asigna a la variable el tiempo en ms
   Serial.begin(9600);
   Serial.println("Sistema activo");
-  r_subida.setHoras(0);
-  r_subida.setMinutos(10);
-  r_subida.setSegundos(0);
+  //r_subida.setHoras(0);
+  //r_subida.setMinutos(10);
+  //r_subida.setSegundos(0);
 
-  r_bajada.setHoras(0);
-  r_bajada.setMinutos(15);
-  r_bajada.setSegundos(0);
+  //r_bajada.setHoras(0);
+  //r_bajada.setMinutos(15);
+  //r_bajada.setSegundos(0);
 
-  vela1.setHora_subida(r_subida);
-  vela1.setHora_bajada(r_bajada);
+  //vela1.setHora_subida(r_subida);
+  //vela1.setHora_bajada(r_bajada);
 
 
 }
@@ -42,8 +40,8 @@ void setup() {
 void loop() {
 
 
-  tiempo_subida=vela1.getHora_subida();
-  tiempo_bajada=vela1.getHora_bajada();
+  //tiempo_subida=vela1.getHora_subida();
+  //tiempo_bajada=vela1.getHora_bajada();
 
   alarma_subida(tiempo_subida);
 
