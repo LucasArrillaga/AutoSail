@@ -22,11 +22,11 @@ void setup() {
   Serial.begin(9600);
   Serial.println("Sistema activo");
   r_subida.setHoras(0);
-  r_subida.setMinutos(10);
+  r_subida.setMinutos(1);
   r_subida.setSegundos(0);
 
   r_bajada.setHoras(0);
-  r_bajada.setMinutos(15);
+  r_bajada.setMinutos(5);
   r_bajada.setSegundos(0);
 
   vela1.setHora_subida(r_subida);
