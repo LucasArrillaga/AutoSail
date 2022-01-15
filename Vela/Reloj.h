@@ -1,5 +1,3 @@
-#ifndef _RELOJ
-#define _RELOJ
 class Reloj {
 
   int horas;
@@ -15,13 +13,6 @@ class Reloj {
     int getSegundos(void); //Método Get
     unsigned long conv_a_mili(void); // metodo para convertir a milisegundos
 };
-#include  ″Reloj.c″
-#endif
-
-
-
-
-
 
 void Reloj::setHoras(int hora_reloj){
 	horas = hora_reloj;

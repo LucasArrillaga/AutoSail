@@ -1,8 +1,7 @@
 
 #include "Reloj.h"
 
-#ifndef _VELA
-#define _VELA
+
 class Vela {
 
   Reloj hora_subida;
@@ -17,9 +16,6 @@ class Vela {
     unsigned long getHora_bajada();
     bool getBajar();
 };
-#include  ″Vela.c″
-#endif
-
 
 void Vela::setHora_subida(Reloj h_subida){
 	hora_subida = h_subida;
