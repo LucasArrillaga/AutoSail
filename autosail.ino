@@ -8,7 +8,7 @@ Vela vela1;
 int vueltas_bajar=2;
 int vueltas_subir=3;
 int  contador= 0;
-long tiempo_subida=3000;
+long tiempo_subida=3001;
 long tiempo_bajada=90000;
 unsigned long tiempo = 0;
 
