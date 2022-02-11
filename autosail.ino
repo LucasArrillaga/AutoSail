@@ -1,4 +1,4 @@
-#include <SoftwareSerial.h>
+ #include <SoftwareSerial.h>
 
 //#include <Reloj.h>
 //#include <Vela.h>
@@ -10,12 +10,12 @@ Stepper motor1(2048, 8, 10, 9, 11);
 int vueltas_bajar = 2;
 int vueltas_subir = 3;
 int  contador = 0;
-long tiempo_subida = 3000;
-long tiempo_bajada = 90000;
+long tiempo_subida = 1;
+long tiempo_bajada = 1;
 unsigned long tiempo = 0;
 
 SoftwareSerial miBT(7, 6); // pin 7 como RX, pin 6 como TX
-char DATO = 0;
+String DATO;
 
 
 void setup() {
@@ -46,25 +46,50 @@ void loop() {
 
 if (miBT.available()){       // si hay informacion disponible desde modulo
       // lee Bluetooth y envia a monitor serial de Arduino
-DATO = miBT.read();    // almacena en DATO el caracter recibido desde modulo
-Serial.write(DATO);
-  if( DATO == '1' ){
+DATO = miBT.readStringUntil('\n');    // almacena en DATO el caracter recibido desde modulo
+//Serial.write(DATO);
+  if( DATO == "1" ){
     activar_motor_subir(1);
     Serial.println("Motor debe subir");
-    
-    }       
-    
-  if( DATO == '2' ){
+
+    }
+
+  if( DATO == "2" ){
     activar_motor_bajar(1);
     Serial.println("Motor debe bajar");
     }
-    
+  if(DATO == "3"){
+    Serial.println("Ingrese tiempo subida, 0 para salir ");
+    while(tiempo_subida==1){
+      tiempo_subida=miBT.readStringUntil('\n').toInt();
+      if(tiempo_subida>=10000){
+        Serial.write(tiempo_subida);
+        break;
+      }else{
+        Serial.println("tiempo debe ser mayor a 10000");
+       
+      }
+    }
+  }
+  if(DATO=="4"){
+
+    Serial.println("Ingrese timpo bajada");
+    tiempo_bajada=miBT.read();
+
+  }
+  if(DATO=="5"){
+
+    Serial.println("tiempo bajada:"+tiempo_bajada);
+    Serial.println("tiempo subida:"+tiempo_subida);
+
+
+  }
+
 
 }
-if (Serial.available())     // si hay informacion disponible desde el monitor serial
-   miBT.write(Serial.read());   // lee monitor serial y envia a Bluetooth
 
-   
+
+
   //tiempo_subida=vela1.getHora_subida();
   //tiempo_bajada=vela1.getHora_bajada();
 
