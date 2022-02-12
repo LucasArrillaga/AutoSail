@@ -48,8 +48,8 @@ Serial.begin(9600);    // comunicacion de monitor serial a 9600 bps
 }
 
 void loop() {
-
-  while (miBT.available()) {      // si hay informacion disponible desde modulo
+  
+  if (miBT.available()>0) {      // si hay informacion disponible desde modulo
       // lee Bluetooth y envia a monitor serial de Arduino
       dato = miBT.read();    // almacena en DATO el caracter recibido desde modulo
       data.concat(dato);
@@ -63,12 +63,14 @@ void loop() {
             if(data=="AX"){
 
                 Serial.println("Subir vela");
+                activar_motor_subir(1);
                 data="";
               }
 
               if(data=="BX"){
 
                 Serial.println("Bajar vela");
+                activar_motor_bajar(1);
                 data="";
               }
 
@@ -76,14 +78,14 @@ void loop() {
           }
       
     if(dato == 'S'){
-      
+        
         Serial.println("Tiempo Subida: ");
         Serial.println(data);
         String subida=data.substring(0, data.length() - 1);
         
         tiempo_subida=subida.toInt();
         Serial.println(tiempo_subida);
-        alarma_subida(tiempo_subida);
+        alarma_subida(tiempo_subida+millis());
         data="";
       
       }
@@ -102,36 +104,46 @@ void loop() {
       } 
 
 
-}
+}else{
+  Serial.println("bt caido");
+  }
 
 
-
-  //tiempo_subida=vela1.getHora_subida();
-  //tiempo_bajada=vela1.getHora_bajada();
-
-  //alarma_subida(tiempo_subida);
-
-  //alarma_bajada(tiempo_bajada);
 
 }
 
 void alarma_subida(unsigned long hora_alarma) {
+  Serial.println("se activo la alarma subida");
+  
   unsigned long hora = hora_alarma;
-  if (millis() == hora) {
-    Serial.println("se activo la alarma subida");
-    Serial.println(hora);
-    activar_motor_subir(vueltas_subir);
+  Serial.println(hora);
+  Serial.println(millis());
+  int i=0;
+  while(i<1){
+    
+    if (millis() == hora) {
+    
+      Serial.println(hora);
+      activar_motor_subir(vueltas_subir);
+      i++;
+    }
+  
   }
-
 }
 
 void alarma_bajada(unsigned long hora_alarma) {
   unsigned long hora = hora_alarma;
-  if (millis() == hora) {
-    Serial.println("se activo la alarma bajada");
-    activar_motor_bajar(vueltas_bajar);
+  
+   Serial.println(hora);
+  Serial.println(millis());
+  int i=0;
+  while(i<1){
+    if (millis() == hora) {
+      Serial.println("se activo la alarma bajada");
+      activar_motor_bajar(vueltas_bajar);
+      i++;
+    }
   }
-
 }
 
 void activar_motor_subir(int vueltas) {
