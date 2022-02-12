@@ -15,8 +15,11 @@ long tiempo_subida = 1;
 long tiempo_bajada = 1;
 unsigned long tiempo = 0;
 
-SoftwareSerial miBT(7, 6); // pin 7 como RX, pin 6 como TX
-String DATO;
+SoftwareSerial miBT(7, 6);
+
+char dato;
+String data = "";
+
 
 
 void setup() {
@@ -24,7 +27,8 @@ void setup() {
 Serial.begin(9600);    // comunicacion de monitor serial a 9600 bps
   Serial.println("Listo");  // escribe Listo en el monitor
   miBT.begin(38400);    // comunicacion serie entre Arduino y el modulo a 38400 bps
-
+  
+  
   motor1.setSpeed(3);
   tiempo = millis(); //se asigna a la variable el tiempo en ms
   Serial.begin(9600);
@@ -45,50 +49,57 @@ Serial.begin(9600);    // comunicacion de monitor serial a 9600 bps
 
 void loop() {
 
-if (miBT.available()){       // si hay informacion disponible desde modulo
+  while (miBT.available()) {      // si hay informacion disponible desde modulo
       // lee Bluetooth y envia a monitor serial de Arduino
-DATO = miBT.readStringUntil('\n');    // almacena en DATO el caracter recibido desde modulo
-//Serial.write(DATO);
-  if( DATO == "1" ){
-    activar_motor_subir(1);
-    Serial.println("Motor debe subir");
+      dato = miBT.read();    // almacena en DATO el caracter recibido desde modulo
+      data.concat(dato);
 
-    }
+      if (dato == 'X')
+        {
+          
+            Serial.println("Received: ");
+            Serial.println(data);
 
-  if( DATO == "2" ){
-    activar_motor_bajar(1);
-    Serial.println("Motor debe bajar");
-    }
-  if(DATO == "3"){
-    Serial.println("Ingrese tiempo subida, 0 para salir ");
-    while(cont==1){
-      delay(15000);
-      tiempo_subida=miBT.readStringUntil('\n').toInt();
-      if(tiempo_subida>=10000){
-        Serial.write(miBT.readStringUntil('\n').toInt());
-        cont=0;
-      }else{
-        Serial.println("tiempo debe ser mayor a 10000");
-        Serial.write(miBT.readStringUntil('\n').toInt());
-        cont=0;
+            if(data=="AX"){
+
+                Serial.println("Subir vela");
+                data="";
+              }
+
+              if(data=="BX"){
+
+                Serial.println("Bajar vela");
+                data="";
+              }
+
+            data="";
+          }
+      
+    if(dato == 'S'){
+      
+        Serial.println("Tiempo Subida: ");
+        Serial.println(data);
+        String subida=data.substring(0, data.length() - 1);
         
-       
+        tiempo_subida=subida.toInt();
+        Serial.println(tiempo_subida);
+        alarma_subida(tiempo_subida);
+        data="";
+      
       }
-    }
-  }
-  if(DATO=="4"){
 
-    Serial.println("Ingrese timpo bajada");
-    tiempo_bajada=miBT.read();
-
-  }
-  if(DATO=="5"){
-
-    Serial.println("tiempo bajada:"+tiempo_bajada);
-    Serial.println("tiempo subida:"+tiempo_subida);
-
-
-  }
+     if(dato == 'B'){
+      
+        Serial.println("Tiempo Bajada: ");
+        Serial.println(data);
+        String bajada=data.substring(0, data.length() - 1);
+        
+        tiempo_bajada=bajada.toInt();
+        Serial.println(tiempo_bajada);
+        alarma_bajada(tiempo_bajada+millis());
+        data="";
+      
+      } 
 
 
 }
