@@ -10,6 +10,7 @@ Stepper motor1(2048, 8, 10, 9, 11);
 int vueltas_bajar = 2;
 int vueltas_subir = 3;
 int  contador = 0;
+int cont = 1;
 long tiempo_subida = 1;
 long tiempo_bajada = 1;
 unsigned long tiempo = 0;
@@ -60,13 +61,17 @@ DATO = miBT.readStringUntil('\n');    // almacena en DATO el caracter recibido d
     }
   if(DATO == "3"){
     Serial.println("Ingrese tiempo subida, 0 para salir ");
-    while(tiempo_subida==1){
+    while(cont==1){
+      delay(15000);
       tiempo_subida=miBT.readStringUntil('\n').toInt();
       if(tiempo_subida>=10000){
-        Serial.write(tiempo_subida);
-        break;
+        Serial.write(miBT.readStringUntil('\n').toInt());
+        cont=0;
       }else{
         Serial.println("tiempo debe ser mayor a 10000");
+        Serial.write(miBT.readStringUntil('\n').toInt());
+        cont=0;
+        
        
       }
     }
