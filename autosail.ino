@@ -1,6 +1,17 @@
+#include <TimeLib.h>
+
 #include <SoftwareSerial.h>
 #include <Stepper.h>
+
+unsigned long previousTime = 0;
 Stepper motor1(2048, 8, 10, 9, 11);
+time_t nowTime = 0;
+int hora = 1;
+int minuto = 1;
+int segundo = 1;
+int dia = 1;
+int mes = 1;
+int ano = 1;
 int vueltas_bajar = 2;
 int vueltas_subir = 3;
 bool baja;
@@ -23,16 +34,19 @@ tiempo = millis(); //se asigna a la variable el tiempo en ms
 Serial.begin(9600);
 Serial.println("Sistema activo");
 
+
 }
 
 void loop() {
 
+  actualizar_reloj();
+  
+
 if (miBT.available()>0) {      // si hay informacion disponible desde modulo
 // lee Bluetooth y envia a monitor serial de Arduino
-dato = miBT.read();    // almacena en DATO el caracter recibido desde modulo
-data.concat(dato);
-if (dato == 'X')
-       {
+  dato = miBT.read();    // almacena en DATO el caracter recibido desde modulo
+  data.concat(dato);
+  if (dato == 'X'){
            Serial.println("Received: ");
            Serial.println(data);
            if(data=="AX"){
@@ -47,7 +61,7 @@ if (dato == 'X')
              }
            data="";
          }
-   if(dato == 'S'){
+  if(dato == 'S'){
        Serial.println("Tiempo Subida: ");
        Serial.println(data);
        String subida=data.substring(0, data.length() - 1);
@@ -56,7 +70,7 @@ if (dato == 'X')
        //alarma_subida(tiempo_subida+millis());
        data="";
      }
-    if(dato == 'B'){
+  if(dato == 'B'){
 
        Serial.println("Tiempo Bajada: ");
        Serial.println(data);
@@ -68,7 +82,7 @@ if (dato == 'X')
 
      }
 
-      if(dato == 'C'){
+  if(dato == 'C'){
 
 
       if(tiempo_subida>15000){
@@ -76,7 +90,7 @@ if (dato == 'X')
          Serial.println("Tiempo Subida: ");
          Serial.println(tiempo_subida);
          alarma_subida(tiempo_subida);
-      
+
         if(tiempo_bajada>50000){
            Serial.println("Tiempo Bajada: ");
            Serial.println(tiempo_bajada);
@@ -86,12 +100,122 @@ if (dato == 'X')
          Serial.println("Error en el tiempo de bajada");
      }else
        Serial.println("Error en el tiempo de subida");
-      
+
   data="";
 }
+  if(dato == 'h'){
+
+      String hora_h=data.substring(0, data.length() - 1);
+      hora = hora_h.toInt();
+      setTime(hora,minuto,segundo,dia,mes,ano);
+      Serial.println(hour(nowTime));
+      Serial.println(minute(nowTime));
+      Serial.println(second(nowTime));
+
+      data="";
+
+    }
+  if(dato=='m'){
+
+      String hora_m=data.substring(0, data.length() - 1);
+      minuto = hora_m.toInt();
+      setTime(hora,minuto,segundo,dia,mes,ano);
+      Serial.println(hour(nowTime));
+      Serial.println(minute(nowTime));
+      Serial.println(second(nowTime));
+
+      data="";
+
+
+    }
+  if(dato=='s'){
+
+      String hora_s=data.substring(0, data.length() - 1);
+      segundo = hora_s.toInt();
+      setTime(hora,minuto,segundo,dia,mes,ano);
+      Serial.println(hour(nowTime));
+      Serial.println(minute(nowTime));
+      Serial.println(second(nowTime));
+
+      data="";
+
+
+    }
+  if(dato=='D'){
+
+      String hora_d=data.substring(0, data.length() - 1);
+      dia = hora_d.toInt();
+      setTime(hora,minuto,segundo,dia,mes,ano);
+      Serial.println(hour(nowTime));
+      Serial.println(minute(nowTime));
+      Serial.println(second(nowTime));
+
+      data="";
+
+
+    }
+  if(dato=='M'){
+        String hora_M=data.substring(0, data.length() - 1);
+      mes = hora_M.toInt();
+      setTime(hora,minuto,segundo,dia,mes,ano);
+      Serial.println(hour(nowTime));
+      Serial.println(minute(nowTime));
+      Serial.println(second(nowTime));
+
+      data="";
+
+    }
+  if(dato=='Y'){
+      String hora_Y=data.substring(0, data.length() - 1);
+      ano = hora_Y.toInt();
+      setTime(hora,minuto,segundo,dia,mes,ano);
+      Serial.println(hour(nowTime));
+      Serial.println(minute(nowTime));
+      Serial.println(second(nowTime));
+
+      data="";
+
+    }
+
+  actualizar_reloj();
+}
+
 
 }
+
+void actualizar_reloj(){
+
+  if (millis() >= (previousTime))
+  {
+     previousTime = previousTime + 1000;  // use 100000 for uS
+     segundo = segundo +1;
+     if (segundo == 60)
+     {
+      Serial.println("HORA:");
+  Serial.println(hour(nowTime));
+  Serial.println("MIN");
+  Serial.println(minute(nowTime));
+  Serial.println("SEG");
+  Serial.println(second(nowTime));
+
+        segundo = 0;
+        minuto = minuto +1;
+     }
+     if (minuto == 60)
+     {
+        minuto = 0;
+        hora = hora +1;
+     }
+     if (hora == 24)
+     {
+       hora = 0;
+       dia+1;
+     }
+
+  }
+setTime(hora,minuto,segundo,dia,mes,ano);
 }
+
 void alarma_subida(unsigned long hora_alarma) {
 
  Serial.println("se activo la alarma subida");
