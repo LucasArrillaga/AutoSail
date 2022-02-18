@@ -14,11 +14,19 @@ int mes = 1;
 int ano = 1;
 int vueltas_bajar = 2;
 int vueltas_subir = 3;
-bool baja;
+bool subida = false;
+bool bajada = false;
 int  contador = 0;
 int cont = 1;
 long tiempo_subida = 1;
 long tiempo_bajada = 1;
+int hora_subida;
+int min_subida;
+int dia_subida;
+int hora_bajada;
+int min_bajada;
+int dia_bajada;
+
 unsigned long tiempo = 0;
 SoftwareSerial miBT(7, 6);
 char dato;
@@ -40,56 +48,78 @@ Serial.println("Sistema activo");
 void loop() {
 
   actualizar_reloj();
-  
+
 
 if (miBT.available()>0) {      // si hay informacion disponible desde modulo
 // lee Bluetooth y envia a monitor serial de Arduino
   dato = miBT.read();    // almacena en DATO el caracter recibido desde modulo
   data.concat(dato);
-  if (dato == 'X'){
-           Serial.println("Received: ");
-           Serial.println(data);
-           if(data=="AX"){
-               Serial.println("Subir vela");
-               activar_motor_subir(1);
-               data="";
-             }
-             if(data=="BX"){
-               Serial.println("Bajar vela");
-               activar_motor_bajar(1);
-               data="";
-             }
-           data="";
-         }
-  if(dato == 'S'){
-       Serial.println("Tiempo Subida: ");
+
+
+  if(data=="A"){
+      Serial.println("Subir vela");
+      activar_motor_subir(1);
+      data="";
+  }
+  if(data=="B"){
+      Serial.println("Bajar vela");
+      activar_motor_bajar(1);
+      data="";
+  }
+
+
+  if(dato == 'E'){ //hora subida
+       Serial.println("Hora subida: ");
        Serial.println(data);
        String subida=data.substring(0, data.length() - 1);
-       tiempo_subida=subida.toInt();
-       Serial.println(tiempo_subida);
-       //alarma_subida(tiempo_subida+millis());
+       hora_subida=subida.toInt();
        data="";
      }
-  if(dato == 'B'){
 
-       Serial.println("Tiempo Bajada: ");
-       Serial.println(data);
-       String bajada=data.substring(0, data.length() - 1);
-       tiempo_bajada=bajada.toInt();
-       Serial.println(tiempo_bajada);
-       //alarma_bajada(tiempo_bajada+millis());
+  if(dato == 'F'){ //min subida
+      Serial.println("Minutos subida: ");
+      String subida=data.substring(0, data.length() - 1);
+      min_subida=subida.toInt();
+      data="";
+  }
+
+  if(dato == 'G'){ //dia subida
+       Serial.println("Dia subida: ");
+       String subida=data.substring(0, data.length() - 1);
+       dia_subida=subida.toInt();
        data="";
-
      }
+
+  if(dato == 'I'){ //hora bajada
+          Serial.println("Hora bajada: ");
+          String bajada=data.substring(0, data.length() - 1);
+          hora_bajada=bajada.toInt();
+          data="";
+        }
+  if(dato == 'J'){ //min bajada
+             Serial.println("Minutos bajada: ");
+             String bajada=data.substring(0, data.length() - 1);
+             min_bajada=bajada.toInt();
+             data="";
+           }
+  if(dato == 'K'){ //Dia bajada
+                Serial.println("Dia bajada: ");
+                String bajada=data.substring(0, data.length() - 1);
+                dia_bajada=bajada.toInt();
+                data="";
+              }
+
 
   if(dato == 'C'){
 
 
-      if(tiempo_subida>15000){
+      if(dia_subida>=day(nowTime)&&hora_subida>=hour(nowTime)&&min_subida>(minute(nowTime)+14)){
 
          Serial.println("Tiempo Subida: ");
-         Serial.println(tiempo_subida);
-         alarma_subida(tiempo_subida);
+         Serial.println(dia_subida);
+         Serial.println(hora_subida);
+         Serial.println(min_subida);
+         //alarma_subida(tiempo_subida);
 
         if(tiempo_bajada>50000){
            Serial.println("Tiempo Bajada: ");
