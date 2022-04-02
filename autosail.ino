@@ -12,7 +12,7 @@ int segundo = 1;
 int dia = 1;
 int mes = 1;
 int ano = 1;
-int vueltas_bajar = 2;
+int vueltas_bajar = 3;
 int vueltas_subir = 3;
 bool subida = false;
 bool bajada = false;
@@ -20,9 +20,11 @@ int  contador = 0;
 int cont = 1;
 long tiempo_subida = 1;
 long tiempo_bajada = 1;
+
 int hora_subida;
 int min_subida;
 int dia_subida;
+
 int hora_bajada;
 int min_bajada;
 int dia_bajada;
@@ -58,12 +60,12 @@ if (miBT.available()>0) {      // si hay informacion disponible desde modulo
 
   if(data=="A"){
       Serial.println("Subir vela");
-      activar_motor_subir(1);
+      activar_motor_subir(3);
       data="";
   }
   if(data=="B"){
       Serial.println("Bajar vela");
-      activar_motor_bajar(1);
+      activar_motor_bajar(3);
       data="";
   }
 
@@ -113,23 +115,23 @@ if (miBT.available()>0) {      // si hay informacion disponible desde modulo
   if(dato == 'C'){
 
 
-      if(dia_subida>=day(nowTime)&&hora_subida>=hour(nowTime)&&min_subida>(minute(nowTime)+14)){
+
 
          Serial.println("Tiempo Subida: ");
          Serial.println(dia_subida);
          Serial.println(hora_subida);
          Serial.println(min_subida);
-         //alarma_subida(tiempo_subida);
+         alarma_subida(dia_subida,hora_subida,min_subida);
 
-        if(tiempo_bajada>50000){
+
            Serial.println("Tiempo Bajada: ");
-           Serial.println(tiempo_bajada);
-           alarma_bajada(tiempo_bajada);
-       }
-       else
-         Serial.println("Error en el tiempo de bajada");
-     }else
-       Serial.println("Error en el tiempo de subida");
+           Serial.println(dia_bajada);
+           Serial.println(hora_bajada);
+           Serial.println(min_bajada);
+           alarma_bajada(dia_bajada,hora_bajada,min_bajada);
+
+
+
 
   data="";
 }
@@ -246,45 +248,37 @@ void actualizar_reloj(){
 setTime(hora,minuto,segundo,dia,mes,ano);
 }
 
-void alarma_subida(unsigned long hora_alarma) {
+void alarma_subida(int dia_subida,int hora_subida, int min_subida) {
 
- Serial.println("se activo la alarma subida");
- unsigned long hora = hora_alarma;
- Serial.println(hora);
- Serial.println(millis());
- int i=0;
- while(i<1){
+  if(dia_subida==day(nowTime)&&hora_subida==hour(nowTime)&&min_subida==minute(nowTime)){
 
-   if (millis() == hora) {
+    Serial.println("se activo la alarma subida");
 
-     Serial.println(hora);
-     activar_motor_subir(vueltas_subir);
-     i++;
+    int i=0;
+    while(i<1){
 
-   }
+      activar_motor_subir(vueltas_subir);
+      i++;
+    }
+  }
+}
 
- }
+void alarma_bajada(int dia_bajada,int hora_bajada, int min_bajada) {
 
+  if(dia_bajada==day(nowTime)&&hora_bajada==hour(nowTime)&&min_bajada==minute(nowTime)){
 
+    Serial.println("se activo la alarma bajada");
+
+    int i=0;
+    while(i<1){
+
+      activar_motor_subir(vueltas_bajar);
+      i++;
+    }
+  }
 }
 
 
-void alarma_bajada(unsigned long hora_alarma) {
-
-  unsigned long hora = hora_alarma;
-  Serial.println(hora);
-  Serial.println(millis());
-  int i=0;
-  while(i<1){
-   if (millis() == hora) {
-     Serial.println("se activo la alarma bajada");
-     activar_motor_bajar(vueltas_bajar);
-     i++;
-   }
-
- }
-
-}
 
 void activar_motor_subir(int vueltas) {
  int num_vueltas = vueltas;
@@ -330,13 +324,15 @@ void activar_motor_bajar(int vueltas) {
 void vuelta_motor() {
 
   motor1.step(2048);
-  apagado_bobinas();
+  actualizar_reloj();
+    apagado_bobinas();
 
 }
 
 void vuelta_motor_negativa() {
 
  motor1.step(-2048);
+ actualizar_reloj();
  apagado_bobinas();
 
 }
